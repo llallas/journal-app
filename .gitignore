@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.*.local
+client/dist/
+client/build/
+.prisma/
+.DS_Store
+Thumbs.db
