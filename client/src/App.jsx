@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 
-const API_URL = "/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 async function getErrorMessage(response, fallback) {
   const result = await response.json().catch(() => null);
@@ -34,7 +34,10 @@ function App() {
       setEntries(await getEntries());
       setError("");
     } catch (err) {
-      setError(err.message || "Failed to load entries. Check that the server and database are running.");
+      setError(
+        err.message ||
+          "Failed to load entries. Check that the server and database are running.",
+      );
     } finally {
       setLoading(false);
     }
@@ -49,7 +52,10 @@ function App() {
       })
       .catch((err) => {
         if (!controller.signal.aborted) {
-          setError(err.message || "Failed to load entries. Check that the server and database are running.");
+          setError(
+            err.message ||
+              "Failed to load entries. Check that the server and database are running.",
+          );
         }
       })
       .finally(() => {
@@ -80,7 +86,9 @@ function App() {
       });
 
       if (!response.ok) {
-        throw new Error(await getErrorMessage(response, "Failed to save entry."));
+        throw new Error(
+          await getErrorMessage(response, "Failed to save entry."),
+        );
       }
 
       await fetchEntries();
@@ -98,9 +106,13 @@ function App() {
 
     setError("");
     try {
-      const response = await fetch(`${API_URL}/entries/${id}`, { method: "DELETE" });
+      const response = await fetch(`${API_URL}/entries/${id}`, {
+        method: "DELETE",
+      });
       if (!response.ok) {
-        throw new Error(await getErrorMessage(response, "Failed to delete entry."));
+        throw new Error(
+          await getErrorMessage(response, "Failed to delete entry."),
+        );
       }
 
       await fetchEntries();
@@ -145,8 +157,7 @@ function App() {
               <button
                 className="entry-title"
                 onClick={() => viewDetail(entry)}
-                type="button"
-              >
+                type="button">
                 {entry.title}
               </button>
               <p className="date">
@@ -160,8 +171,7 @@ function App() {
                 <button
                   className="delete-btn"
                   onClick={() => handleDelete(entry.id)}
-                  type="button"
-                >
+                  type="button">
                   Delete
                 </button>
               </div>
@@ -207,8 +217,7 @@ function App() {
             className="secondary-btn"
             disabled={saving}
             onClick={() => setView("list")}
-            type="button"
-          >
+            type="button">
             Cancel
           </button>
         </div>
@@ -218,7 +227,10 @@ function App() {
 
   const renderDetail = () => (
     <article className="entry-detail">
-      <button className="secondary-btn" onClick={() => setView("list")} type="button">
+      <button
+        className="secondary-btn"
+        onClick={() => setView("list")}
+        type="button">
         Back to entries
       </button>
       <h2>{currentEntry.title}</h2>
@@ -233,8 +245,7 @@ function App() {
         <button
           className="delete-btn"
           onClick={() => handleDelete(currentEntry.id)}
-          type="button"
-        >
+          type="button">
           Delete
         </button>
       </div>
@@ -252,14 +263,19 @@ function App() {
           <div className="error-banner" role="alert">
             <span>{error}</span>
             {view === "list" && (
-              <button className="retry-btn" onClick={fetchEntries} type="button">
+              <button
+                className="retry-btn"
+                onClick={fetchEntries}
+                type="button">
                 Try again
               </button>
             )}
           </div>
         )}
         {loading ? (
-          <p aria-live="polite" className="loading">Loading your journal...</p>
+          <p aria-live="polite" className="loading">
+            Loading your journal...
+          </p>
         ) : (
           <>
             {view === "list" && renderList()}
