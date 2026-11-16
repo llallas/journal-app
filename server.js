@@ -49,7 +49,9 @@ app.get("/api/entries", async (req, res) => {
     res.json(entries);
   } catch (error) {
     logDatabaseError("fetch entries", error);
-    res.status(500).json({ error: "Failed to fetch entries. Check the database connection." });
+    res.status(500).json({
+      error: "Failed to fetch entries. Check the database connection.",
+    });
   }
 });
 
@@ -118,14 +120,14 @@ app.delete("/api/entries/:id", async (req, res) => {
   }
 });
 
-app.use("/api", (req, res) => {
-  res.status(404).json({ error: "API endpoint not found." });
-});
+// app.use("/api", (req, res) => {
+//   res.status(404).json({ error: "API endpoint not found." });
+// });
 
-app.use(express.static(path.join(__dirname, "client/dist")));
+// app.use(express.static(path.join(__dirname, "client/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/dist/index.html"));
+app.get("/", (req, res) => {
+  res.json({ message: "Personal Journal API is running" });
 });
 
 app.use((error, req, res, next) => {
